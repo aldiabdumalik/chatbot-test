@@ -1,10 +1,21 @@
+'use client'
 import { BubbleChatProps } from '@/types/dataType'
 import Image from 'next/image'
 import React from 'react'
+import IconThumbs from '../Svg/IconThumbs'
+import { useRecoilState } from 'recoil'
+import { modalRatingStore } from '@/store/modalStore'
 
 export default function BubbleChat({
   data, children
 }: BubbleChatProps) {
+  const [show, setShow] = useRecoilState(modalRatingStore);
+  const handleLike = (like: string) => {
+    setShow({
+      show: true,
+      type: like
+    })
+  }
   return (
     <div className={`chat ${data.role === 1 ? 'chat-start' : 'chat-end'}`}>
       {data.role === 1 && <div className="chat-image avatar">
@@ -29,19 +40,21 @@ export default function BubbleChat({
               type='button'
               className='p-[0.3rem]'
             >
-              <Image src={'/img/icon/copy.svg'} width={14} height={14} alt='icon-rotate' />
+              <Image src={'/img/icon/copy.svg'} width={14} height={14} alt='icon-copy' />
             </button>
             <button
               type='button'
               className='p-[0.3rem]'
+              onClick={() => handleLike('like')}
             >
-              <Image src={'/img/icon/thumb-up.svg'} width={14} height={14} alt='icon-rotate' />
+              <IconThumbs width={14} height={16} borderColor={data.like ? undefined : '#fff'} fillColor={!data.like ? undefined : '#fff'} />
             </button>
             <button
               type='button'
               className='p-[0.3rem]'
+              onClick={() => handleLike('notlike')}
             >
-              <Image src={'/img/icon/thumb-down.svg'} width={14} height={14} alt='icon-rotate' />
+              <IconThumbs width={14} height={16} borderColor={data.like ? undefined : '#fff'} fillColor={!data.like ? undefined : '#fff'} className='rotate-180' />
             </button>
           </div>
         )}

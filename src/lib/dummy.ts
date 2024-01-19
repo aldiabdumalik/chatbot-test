@@ -5,6 +5,7 @@ export const dummyChat = [
     date: '2024-01-19 12:00:00',
     chat: 'Hello',
     selected: false,
+    like: null,
   },
   {
     id: 2,
@@ -12,6 +13,7 @@ export const dummyChat = [
     date: '2024-01-19 13:00:00',
     chat: 'Iya ada yang bisa saya bantu',
     selected: false,
+    like: null,
   },
   {
     id: 4,
@@ -19,6 +21,7 @@ export const dummyChat = [
     date: '2024-01-19 14:00:00',
     chat: 'Sedang apa?',
     selected: false,
+    like: null,
   },
   {
     id: 5,
@@ -26,5 +29,6 @@ export const dummyChat = [
     date: '2024-01-19 15:00:00',
     chat: 'Sedang begini saja',
     selected: false,
+    like: null,
   },
 ];

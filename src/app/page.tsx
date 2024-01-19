@@ -6,9 +6,11 @@ import { dummyChat } from "@/lib/dummy";
 import Image from "next/image";
 import { countChatSelected, removeChatSelected } from "@/lib/utils";
 import { ResultData } from "@/types/dataType";
+import { useRecoilState } from "recoil";
+import { chatStore } from "@/store/chatStore";
 export default function Home() {
   const [onTap, setOnTap] = useState<null | string>(null);
-  const [result, setResult] = useState<ResultData[] | []>(dummyChat);
+  const [result, setResult] = useRecoilState<ResultData[] | []>(chatStore);
 
   useEffect(() => {
     if (onTap == null) {

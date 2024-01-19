@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Mulish } from "next/font/google";
 import "./globals.css";
-import { RecoilRoot } from "recoil";
+import ModalRating from "@/components/Modal/ModalRating";
+import RecoilProvider from "@/components/Provider/RecoilProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${mulish.variable} font-mul flex flex-col min-h-[100dvh] w-full items-center`}>
-        {children}
+        <RecoilProvider>
+          {children}
+          <ModalRating />
+        </RecoilProvider>
       </body>
     </html>
   );
