@@ -46,6 +46,13 @@ export default function BubbleChat({
           </div>
         )}
       </div>
+      {/* <div className={`absolute ${data.role === 1 ? 'left-0 top-8' : 'right-0'}`}>
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <input type="checkbox" checked={true} className="checkbox" />
+            </label>
+          </div>
+        </div> */}
     </div>
   )
 }
