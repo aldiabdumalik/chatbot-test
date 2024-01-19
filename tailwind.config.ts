@@ -12,7 +12,35 @@ const config: Config = {
       fontFamily: {
         mul: ['var(--font-mul)', ...fontFamily.sans],
       },
+      colors: {
+        primary: '#2B2E63',
+      },
     },
+  },
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          primary: '#2B2E63',
+
+          secondary: '#008617',
+
+          accent: '#00deff',
+
+          neutral: '#231717',
+
+          'base-100': '#1f2f42',
+
+          info: '#009de7',
+
+          success: '#8ff009',
+
+          warning: '#f88900',
+
+          error: '#f9223d',
+        },
+      },
+    ],
   },
   plugins: [require('daisyui')],
 };

@@ -5,22 +5,23 @@ import { useCallback, useEffect, useState } from "react";
 import { dummyChat } from "@/lib/dummy";
 import Image from "next/image";
 import { countChatSelected, removeChatSelected } from "@/lib/utils";
+import { ResultData } from "@/types/dataType";
 export default function Home() {
   const [onTap, setOnTap] = useState<null | string>(null);
-  const [result, setResult] = useState<any>(dummyChat);
+  const [result, setResult] = useState<ResultData[] | []>(dummyChat);
 
   useEffect(() => {
     if (onTap == null) {
-      const data = result.map((vl: any) => { return { ...vl, selected: false } })
+      const data = result.map((vl: ResultData) => { return { ...vl, selected: false } })
       setResult(data)
     }
   }, [onTap]);
-  const handleChekbox = (e: any) => {
-    const data = result.map((vl: any) => vl.id == e.target.value ? { ...vl, selected: !vl.selected } : { ...vl })
+  const handleChekbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const data = result.map((vl: ResultData) => vl.id == Number(e.target.value) ? { ...vl, selected: !vl.selected } : { ...vl })
     return setResult(data)
   }
   const handleSelectedAll = () => {
-    const data = result.map((vl: any) => { return { ...vl, selected: true } })
+    const data = result.map((vl: ResultData) => { return { ...vl, selected: true } })
     return setResult(data)
   }
   const handleRemoveChat = () => {
@@ -31,7 +32,7 @@ export default function Home() {
     <main className="flex flex-col w-full lg:w-1/3 bg-white min-h-[100dvh]">
       <Navbar setOnTap={setOnTap} />
       <div className="flex flex-col flex-1 py-2 px-4 gap-2">
-        {result && result.map((dt: any, i: number) => {
+        {result && result.map((dt: ResultData, i: number) => {
           return (
             <div key={i} className={`relative ${onTap && 'px-8'}`}>
               <BubbleChat data={dt}>{dt.chat}</BubbleChat>
@@ -39,7 +40,7 @@ export default function Home() {
                 <div className={`absolute ${dt.role === 1 ? 'left-0 inset-y-[55%]' : 'right-0 top-2'}`}>
                   <div className="form-control">
                     <label className="label cursor-pointer">
-                      <input type="checkbox" checked={dt.selected} className="checkbox" value={dt.id} onChange={(e) => handleChekbox(e)} />
+                      <input type="checkbox" checked={dt.selected} className="checkbox checkbox-primary" value={dt.id} onChange={(e) => handleChekbox(e)} />
                     </label>
                   </div>
                 </div>
