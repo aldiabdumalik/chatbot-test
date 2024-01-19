@@ -5,5 +5,6 @@ export const modalRatingStore = atom({
   default: {
     show: false,
     type: '',
+    idChat: 0,
   },
 });

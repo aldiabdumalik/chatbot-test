@@ -13,7 +13,8 @@ export default function BubbleChat({
   const handleLike = (like: string) => {
     setShow({
       show: true,
-      type: like
+      type: like,
+      idChat: data.id
     })
   }
   return (
@@ -47,25 +48,18 @@ export default function BubbleChat({
               className='p-[0.3rem]'
               onClick={() => handleLike('like')}
             >
-              <IconThumbs width={14} height={16} borderColor={data.like ? undefined : '#fff'} fillColor={!data.like ? undefined : '#fff'} />
+              <IconThumbs width={14} height={16} borderColor={data.like == null ? '#fff' : data.like ? undefined : '#fff'} fillColor={data.like !== null ? !data.like ? undefined : '#fff' : undefined} />
             </button>
             <button
               type='button'
               className='p-[0.3rem]'
               onClick={() => handleLike('notlike')}
             >
-              <IconThumbs width={14} height={16} borderColor={data.like ? undefined : '#fff'} fillColor={!data.like ? undefined : '#fff'} className='rotate-180' />
+              <IconThumbs width={14} height={16} borderColor={data.like == null ? '#fff' : !data.like ? undefined : '#fff'} fillColor={data.like !== null ? data.like ? undefined : '#fff' : undefined} className='rotate-180' />
             </button>
           </div>
         )}
       </div>
-      {/* <div className={`absolute ${data.role === 1 ? 'left-0 top-8' : 'right-0'}`}>
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <input type="checkbox" checked={true} className="checkbox" />
-            </label>
-          </div>
-        </div> */}
     </div>
   )
 }

@@ -5,7 +5,7 @@ interface SvgProps extends React.SVGProps<SVGSVGElement> {
   fillColor?: string;
 }
 export default function IconThumbs({ borderColor, fillColor, ...props }: SvgProps) {
-  console.log(borderColor, fillColor, props)
+  // console.log(borderColor, fillColor, props)
   return (
     <svg
       // width={23}
