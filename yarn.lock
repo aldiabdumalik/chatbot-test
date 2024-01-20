@@ -885,6 +885,7 @@ __metadata:
     daisyui: latest
     dotenv: ^16.3.1
     langchain: ^0.1.4
+    moment: ^2.30.1
     next: 14.1.0
     openai: ^4.24.7
     postcss: ^8
@@ -2053,6 +2054,13 @@ daisyui@latest:
     binary-search: ^1.3.5
     num-sort: ^2.0.0
   checksum: f99e217dc94acf75c089469dc3c278f388146e43c82212160b6b75daa14309902f84eb0a00c67d502fc79dc171cf15a33d392326e024b2e89881adc585d15513
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.30.1":
+  version: 2.30.1
+  resolution: "moment@npm:2.30.1"
+  checksum: 859236bab1e88c3e5802afcf797fc801acdbd0ee509d34ea3df6eea21eb6bcc2abd4ae4e4e64aa7c986aa6cba563c6e62806218e6412a765010712e5fa121ba6
   languageName: node
   linkType: hard
 

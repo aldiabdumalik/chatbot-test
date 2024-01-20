@@ -5,11 +5,12 @@ import { useCallback, useEffect, useState } from "react";
 import { dummyChat } from "@/lib/dummy";
 import Image from "next/image";
 import { countChatSelected, fixMonth, removeChatSelected } from "@/lib/utils";
-import { ResultData } from "@/types/dataType";
+import { ResultData, SortingDateData } from "@/types/dataType";
 import { useRecoilState } from "recoil";
 import { chatStore, clientIdStore } from "@/store/chatStore";
 import { useChat } from "ai/react";
 import { Message } from "ai";
+import moment from "moment";
 export default function Home() {
   const [onTap, setOnTap] = useState<null | string>(null);
   const [result, setResult] = useRecoilState<ResultData[] | []>(chatStore);
@@ -56,24 +57,57 @@ export default function Home() {
       like: null,
     }])
     setIncrement((prev: number) => prev + 1);
+    // console.log(generateItems(result));
     handleSubmit(e);
+  }
+
+  function groupedDays(messages: ResultData[]) {
+    return messages.reduce((acc: any, el: ResultData, i: number) => {
+      const messageDay = moment(el.date).format('YYYY-MM-DD');
+      if (acc[messageDay]) {
+        return { ...acc, [messageDay]: acc[messageDay].concat([el]) };
+      }
+      return { ...acc, [messageDay]: [el] };
+    }, {});
+  }
+
+  function generateItems(messages: ResultData[]) {
+    const days = groupedDays(messages);
+    const sortedDays = Object.keys(days).sort(
+      (x, y) => moment(y, 'YYYY-MM-DD').unix() - moment(x, 'YYYY-MM-DD').unix()
+    );
+    const items = sortedDays.reduce((acc: any, date: any) => {
+      const sortedMessages = days[date].sort(
+        (x: ResultData, y: ResultData) => x.date.valueOf() - y.date.valueOf()
+      );
+      return acc.concat([{ type: 'day', date: moment().format('YYYY-MM-DD') == date ? 'Today' : moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY'), id: date }, ...sortedMessages]);
+    }, []);
+    return items;
   }
   return (
     <main className="flex flex-col w-full lg:w-1/3 bg-white min-h-[100dvh]">
       <Navbar isLoading={isLoading} setOnTap={setOnTap} />
       <div className="flex flex-col flex-1 py-2 px-4 gap-2">
-        {result && result.map((dt: ResultData, i: number) => {
+        {result && generateItems(result).map((dt: ResultData | SortingDateData, i: number) => {
           return (
-            <div key={i} className={`relative flex flex-col ${onTap && 'px-8'}`}>
-              <BubbleChat data={dt}>{dt.chat}</BubbleChat>
-              {onTap == 'option' && (
-                <div className={`absolute ${dt.role === 1 ? 'left-0 inset-y-[55%]' : 'right-0 top-2'}`}>
-                  <div className="form-control">
-                    <label className="label cursor-pointer">
-                      <input type="checkbox" checked={dt.selected} className="checkbox checkbox-primary" value={dt.id} onChange={(e) => handleChekbox(e)} />
-                    </label>
-                  </div>
+            <div key={i} className={`relative ${onTap && 'px-8'}`}>
+              {(dt as SortingDateData).type ? (
+                <div className="flex justify-center">
+                  <span className="flex-none justify-center px-6 py-2 rounded-lg text-[#121212] bg-[#EDEDED]">{(dt as SortingDateData).date}</span>
                 </div>
+              ) : (
+                <>
+                  <BubbleChat data={dt as ResultData}>{(dt as ResultData).chat}</BubbleChat>
+                  {onTap == 'option' && (
+                    <div className={`absolute ${(dt as ResultData).role === 1 ? 'left-0 inset-y-[55%]' : 'right-0 top-2'}`}>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <input type="checkbox" checked={(dt as ResultData).selected} className="checkbox checkbox-primary" value={(dt as ResultData).id} onChange={(e) => handleChekbox(e)} />
+                        </label>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )
