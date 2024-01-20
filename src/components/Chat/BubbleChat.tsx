@@ -20,6 +20,11 @@ export default function BubbleChat({
   const convertDate = (date: Date) => {
     return `${date.getHours()}:${date.getMinutes()}`;
   }
+  const copyChat = (chat: string) => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(chat);
+    }
+  }
   return (
     <div className={`chat ${data.role === 1 ? 'chat-start' : 'chat-end'}`}>
       {data.role === 1 && <div className="chat-image avatar">
@@ -43,6 +48,7 @@ export default function BubbleChat({
             <button
               type='button'
               className='p-[0.3rem]'
+              onClick={() => copyChat(data.chat)}
             >
               <Image src={'/img/icon/copy.svg'} width={14} height={14} alt='icon-copy' />
             </button>
