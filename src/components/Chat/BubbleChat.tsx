@@ -17,6 +17,9 @@ export default function BubbleChat({
       idChat: data.id
     })
   }
+  const convertDate = (date: Date) => {
+    return `${date.getHours()}:${date.getMinutes()}`;
+  }
   return (
     <div className={`chat ${data.role === 1 ? 'chat-start' : 'chat-end'}`}>
       {data.role === 1 && <div className="chat-image avatar">
@@ -27,7 +30,7 @@ export default function BubbleChat({
       <div className={`flex flex-col gap-2 chat-bubble ${data.role === 1 ? 'bg-[#2B2E63] text-[#FAFAFA]' : 'bg-[#EDEDED] text-[#212121]'}`}>
         <div className='flex gap-2 items-end'>
           <div className='flex-1 text-sm font-semibold'>{children}</div>
-          <div className='flex-none text-[0.625rem]'>12:00</div>
+          <div className='flex-none text-[0.625rem]'>{convertDate(data.date)}</div>
         </div>
         {data.role === 1 && (
           <div className='flex gap-1 items-center justify-end'>

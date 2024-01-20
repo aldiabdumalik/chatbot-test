@@ -4,5 +4,9 @@ import { atom } from 'recoil';
 
 export const chatStore = atom<ResultData[] | []>({
   key: 'chatStore',
-  default: dummyChat,
+  default: [],
+});
+export const clientIdStore = atom({
+  key: 'clientIdStore',
+  default: 0,
 });

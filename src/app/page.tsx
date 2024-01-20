@@ -4,13 +4,28 @@ import BubbleChat from "@/components/Chat/BubbleChat";
 import { useCallback, useEffect, useState } from "react";
 import { dummyChat } from "@/lib/dummy";
 import Image from "next/image";
-import { countChatSelected, removeChatSelected } from "@/lib/utils";
+import { countChatSelected, fixMonth, removeChatSelected } from "@/lib/utils";
 import { ResultData } from "@/types/dataType";
 import { useRecoilState } from "recoil";
-import { chatStore } from "@/store/chatStore";
+import { chatStore, clientIdStore } from "@/store/chatStore";
+import { useChat } from "ai/react";
+import { Message } from "ai";
 export default function Home() {
   const [onTap, setOnTap] = useState<null | string>(null);
   const [result, setResult] = useRecoilState<ResultData[] | []>(chatStore);
+  const [idIncrement, setIncrement] = useRecoilState(clientIdStore);
+  const { isLoading, messages, input, handleInputChange, handleSubmit } = useChat({
+    onFinish: (message: Message) => {
+      setResult((prev: any) => [...prev, {
+        id: message.id,
+        role: 1,
+        date: message.createdAt,
+        chat: message.content,
+        selected: false,
+        like: null,
+      }])
+    }
+  });
 
   useEffect(() => {
     if (onTap == null) {
@@ -19,7 +34,7 @@ export default function Home() {
     }
   }, [onTap]);
   const handleChekbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const data = result.map((vl: ResultData) => vl.id == Number(e.target.value) ? { ...vl, selected: !vl.selected } : { ...vl })
+    const data = result.map((vl: ResultData) => vl.id == e.target.value ? { ...vl, selected: !vl.selected } : { ...vl })
     return setResult(data)
   }
   const handleSelectedAll = () => {
@@ -30,13 +45,26 @@ export default function Home() {
     const chat = removeChatSelected(result);
     return setResult(chat)
   }
+  const handleSubmitFrom = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setResult((prev: any) => [...prev, {
+      id: idIncrement + 1,
+      role: 2,
+      date: new Date(),
+      chat: input,
+      selected: false,
+      like: null,
+    }])
+    setIncrement((prev: number) => prev + 1);
+    handleSubmit(e);
+  }
   return (
     <main className="flex flex-col w-full lg:w-1/3 bg-white min-h-[100dvh]">
-      <Navbar setOnTap={setOnTap} />
+      <Navbar isLoading={isLoading} setOnTap={setOnTap} />
       <div className="flex flex-col flex-1 py-2 px-4 gap-2">
         {result && result.map((dt: ResultData, i: number) => {
           return (
-            <div key={i} className={`relative ${onTap && 'px-8'}`}>
+            <div key={i} className={`relative flex flex-col ${onTap && 'px-8'}`}>
               <BubbleChat data={dt}>{dt.chat}</BubbleChat>
               {onTap == 'option' && (
                 <div className={`absolute ${dt.role === 1 ? 'left-0 inset-y-[55%]' : 'right-0 top-2'}`}>
@@ -51,7 +79,7 @@ export default function Home() {
           )
         })}
       </div>
-      <div className="flex justify-center py-2 px-8 sticky bottom-0 bg-white border-t">
+      <div className={`flex justify-center py-2 px-8 sticky bottom-0 bg-white ${onTap && 'border-t'}`}>
         {onTap == 'option' ? (
           <div className="flex w-full justify-between items-center">
             <div className="flex items-center text-sm text-[#212121] font-semibold">
@@ -67,8 +95,14 @@ export default function Home() {
             </button>
           </div>
         ) : (
-          <form action="" className="w-full">
-            <input type="text" placeholder="Send Message..." className="input input-bordered border-[#DEDEDE] bg-white w-full" />
+          <form onSubmit={(e) => handleSubmitFrom(e)} className="w-full">
+            <input
+              type="text"
+              placeholder="Send Message..."
+              className="input input-bordered border-[#DEDEDE] bg-white w-full text-[#121212] text-lg"
+              onChange={handleInputChange}
+              value={input}
+            />
           </form>
         )}
       </div>

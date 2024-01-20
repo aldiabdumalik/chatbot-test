@@ -12,3 +12,7 @@ export const countChatSelected = (data: ResultData[]) => {
   const selected = data.filter((vl: ResultData) => vl.selected);
   return selected.length;
 };
+export const fixMonth = (date: Date) => {
+  const month = date.getMonth() + 1;
+  return month.toString().padStart(2, '0');
+};

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
-export default function Navbar({ setOnTap }: { setOnTap: any }) {
+export default function Navbar({ isLoading = false, setOnTap }: { isLoading: boolean, setOnTap: any }) {
   const [isTap, setIsTap] = useState(false)
   const handleClickOption = () => {
     setIsTap(!isTap)
@@ -25,7 +25,7 @@ export default function Navbar({ setOnTap }: { setOnTap: any }) {
         </div>
         <div className="flex flex-col">
           <h2 className="font-bold text-black">Leydroid</h2>
-          {/* <p className="text-sm">AI sedang mengetik...</p> */}
+          {isLoading && <p className="text-sm">AI sedang mengetik...</p>}
         </div>
       </div>
       <div className='p-2'>

@@ -1,7 +1,7 @@
 export type ResultData = {
-  id: number;
+  id: number | string;
   role: number;
-  date: string;
+  date: Date;
   chat: string;
   selected: boolean;
   like?: boolean | null;
