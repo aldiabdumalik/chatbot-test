@@ -1,14 +1,13 @@
 'use client'
 import { modalDeleteStore, modalRatingStore } from '@/store/modalStore'
 import React from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import IconThumbs from '../Svg/IconThumbs';
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { chatStore } from '@/store/chatStore';
 import { ResultData } from '@/types/dataType';
 
 export default function ModalDelete() {
   const [modal, setModal] = useRecoilState(modalDeleteStore);
-  const [result, setResult] = useRecoilState<ResultData[] | []>(chatStore);
+  const setResult = useSetRecoilState<ResultData[] | []>(chatStore);
   const handleSubmit = (e: any) => {
     e.preventDefault()
     setResult(modal.data);

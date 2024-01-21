@@ -16,3 +16,17 @@ export const fixMonth = (date: Date) => {
   const month = date.getMonth() + 1;
   return month.toString().padStart(2, '0');
 };
+export const editChat = (
+  data: ResultData[],
+  id: string | number,
+  cht: string
+) => {
+  if (data.length > 0) {
+    const dt = data.map((vl: ResultData, i: number) =>
+      vl.id == id ? { ...vl, chat: cht } : { ...vl }
+    );
+    return dt;
+  }
+
+  return data;
+};

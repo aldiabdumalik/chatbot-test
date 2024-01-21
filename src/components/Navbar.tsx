@@ -1,10 +1,15 @@
 'use client'
+import { aiIsLoading } from '@/store/chatStore';
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { useRecoilValue, useRecoilValueLoadable } from 'recoil';
 
 export default function Navbar({ isLoading = false, setOnTap }: { isLoading: boolean, setOnTap: any }) {
-  const [isTap, setIsTap] = useState(false)
+  const [isTap, setIsTap] = useState(false);
+  const [load, setLoad] = useState(false);
+  const isLoadingAi = useRecoilValue(aiIsLoading)
+  useEffect(() => setLoad(isLoadingAi), [isLoadingAi])
   const handleClickOption = () => {
     setIsTap(!isTap)
   }
@@ -25,7 +30,7 @@ export default function Navbar({ isLoading = false, setOnTap }: { isLoading: boo
         </div>
         <div className="flex flex-col">
           <h2 className="font-bold text-black">Leydroid</h2>
-          {isLoading && <p className="text-sm">AI sedang mengetik...</p>}
+          {load && <p className="text-sm text-[#252525]">AI sedang mengetik...</p>}
         </div>
       </div>
       <div className='p-2'>

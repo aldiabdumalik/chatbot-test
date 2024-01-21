@@ -1,32 +1,31 @@
 'use client'
-import { BubbleChatProps } from '@/types/dataType'
+import { BubbleChatProps, ResultData } from '@/types/dataType'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import IconThumbs from '../Svg/IconThumbs'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { modalRatingStore } from '@/store/modalStore'
-import { Message, useChat } from 'ai/react'
+import { Message, useChat, useCompletion } from 'ai/react'
+import { aiIsLoading, chatStore } from '@/store/chatStore'
+import { editChat } from '@/lib/utils'
 
 export default function BubbleChat({
   data, children
 }: BubbleChatProps) {
-  const { reload } = useChat({
+  const [result, setResult] = useRecoilState(chatStore);
+  const setModal = useSetRecoilState(modalRatingStore);
+  const setLoading = useSetRecoilState(aiIsLoading)
+  const { isLoading, handleSubmit } = useChat({
     id: data.id as string,
+    initialInput: data?.soal || '',
     onFinish: (message: Message) => {
-      console.log(message)
-      // setResult((prev: any) => [...prev, {
-      //   id: message.id,
-      //   role: 1,
-      //   date: message.createdAt,
-      //   chat: message.content,
-      //   selected: false,
-      //   like: null,
-      // }])
+      const change = editChat(result, data.id, message.content);
+      return setResult(change);
     }
   });
-  const [show, setShow] = useRecoilState(modalRatingStore);
+  useEffect(() => setLoading(isLoading), [isLoading])
   const handleLike = (like: string) => {
-    setShow({
+    setModal({
       show: true,
       type: like,
       idChat: data.id
@@ -38,6 +37,13 @@ export default function BubbleChat({
   const copyChat = (chat: string) => {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(chat);
+    }
+  }
+  function onRegenerateAnswer(e: React.FormEvent<HTMLFormElement>) {
+    // const stop = soal?.split("(stop)").length ?? 0;
+    if (data?.soal && !isLoading) {
+      console.log('test')
+      handleSubmit(e);
     }
   }
   return (
@@ -54,13 +60,14 @@ export default function BubbleChat({
         </div>
         {data.role === 1 && (
           <div className='flex gap-1 items-center justify-end'>
-            <button
-              type='button'
-              className='p-[0.3rem]'
-              onClick={() => reload}
-            >
-              <Image src={'/img/icon/rotate-right.svg'} width={14} height={14} alt='icon-rotate' />
-            </button>
+            <form onSubmit={(e) => onRegenerateAnswer(e)}>
+              <button
+                type='submit'
+                className='p-[0.3rem]'
+              >
+                <Image src={'/img/icon/rotate-right.svg'} width={14} height={14} alt='icon-rotate' />
+              </button>
+            </form>
             <button
               type='button'
               className='p-[0.3rem]'

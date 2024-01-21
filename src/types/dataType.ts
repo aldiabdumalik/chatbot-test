@@ -5,6 +5,7 @@ export type ResultData = {
   chat: string;
   selected: boolean;
   like?: boolean | null;
+  soal?: string;
 };
 export type SortingDateData = {
   id: string;
