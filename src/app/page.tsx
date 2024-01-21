@@ -6,15 +6,17 @@ import { dummyChat } from "@/lib/dummy";
 import Image from "next/image";
 import { countChatSelected, fixMonth, removeChatSelected } from "@/lib/utils";
 import { ResultData, SortingDateData } from "@/types/dataType";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { chatStore, clientIdStore } from "@/store/chatStore";
 import { useChat } from "ai/react";
 import { Message } from "ai";
 import moment from "moment";
+import { modalDeleteStore } from "@/store/modalStore";
 export default function Home() {
   const [onTap, setOnTap] = useState<null | string>(null);
   const [result, setResult] = useRecoilState<ResultData[] | []>(chatStore);
   const [idIncrement, setIncrement] = useRecoilState(clientIdStore);
+  const modalDelete = useSetRecoilState(modalDeleteStore)
   const { isLoading, messages, input, handleInputChange, handleSubmit } = useChat({
     onFinish: (message: Message) => {
       setResult((prev: any) => [...prev, {
@@ -43,8 +45,12 @@ export default function Home() {
     return setResult(data)
   }
   const handleRemoveChat = () => {
-    const chat = removeChatSelected(result);
-    return setResult(chat)
+    return modalDelete({
+      show: true,
+      data: removeChatSelected(result)
+    })
+    // const chat = removeChatSelected(result);
+    // return setResult(chat)
   }
   const handleSubmitFrom = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

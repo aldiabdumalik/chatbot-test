@@ -5,10 +5,25 @@ import React from 'react'
 import IconThumbs from '../Svg/IconThumbs'
 import { useRecoilState } from 'recoil'
 import { modalRatingStore } from '@/store/modalStore'
+import { Message, useChat } from 'ai/react'
 
 export default function BubbleChat({
   data, children
 }: BubbleChatProps) {
+  const { reload } = useChat({
+    id: data.id as string,
+    onFinish: (message: Message) => {
+      console.log(message)
+      // setResult((prev: any) => [...prev, {
+      //   id: message.id,
+      //   role: 1,
+      //   date: message.createdAt,
+      //   chat: message.content,
+      //   selected: false,
+      //   like: null,
+      // }])
+    }
+  });
   const [show, setShow] = useRecoilState(modalRatingStore);
   const handleLike = (like: string) => {
     setShow({
@@ -42,6 +57,7 @@ export default function BubbleChat({
             <button
               type='button'
               className='p-[0.3rem]'
+              onClick={() => reload}
             >
               <Image src={'/img/icon/rotate-right.svg'} width={14} height={14} alt='icon-rotate' />
             </button>

@@ -3,6 +3,7 @@ import { Inter, Mulish } from "next/font/google";
 import "./globals.css";
 import ModalRating from "@/components/Modal/ModalRating";
 import RecoilProvider from "@/components/Provider/RecoilProvider";
+import ModalDelete from "@/components/Modal/ModalDelete";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <RecoilProvider>
           {children}
           <ModalRating />
+          <ModalDelete />
         </RecoilProvider>
       </body>
     </html>
